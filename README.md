@@ -33,7 +33,7 @@ tldextract
 **查看帮助**
 
 ```python
- #get_domain_info git:(master) ✗ ./get_domain_info.py
+ # ./get_domain_info.py
 
             This is Get domain info Tools
 
@@ -91,7 +91,7 @@ awen.me                                                     adrian.ns.cloudflare
 1.**获取单个或多个 域名的解析**
 
 ``` py
-➜  get_domain_info git:(master) ✗ ./get_domain_info.py -rl 163yun.com www.163yun.com 
+ ./get_domain_info.py -rl 163yun.com www.163yun.com 
 ```
 
 
