@@ -218,9 +218,8 @@ def get_ip_attribution(*args):
                 resp_json = response.json()
                 if resp_json[-1] == '电信/联通/移动':
                     resp_json[-1] = 'BGP 线路'
-                
                 return_str =  ",".join(f"{x}" for x in resp_json)
-                print(str(ip)+" Attribution is: "+return_str)
+                print(str(ip)+" 归属地是: "+return_str)
                 time.sleep(2)
 
 
@@ -233,11 +232,15 @@ def menu():
             """
         print(APP_DESC)
     parser = argparse.ArgumentParser()
-    parser.add_argument('-dl', '--domain_list', dest="domain_list",nargs="+", help="Query single or multiple domain name filing information.")
-    parser.add_argument('-df', '--domain_file', dest="domain_file", help="Query multiple domain name filing as files.")
-    parser.add_argument('-rl', '--record_list', dest="record_list",nargs="+", help="Query single or multiple domain name resolution")
-    parser.add_argument('-rf', '--record_file', dest="record_file", help="Query multiple domain name resolutions as files.")
-    parser.add_argument('-ip', '--ip', dest="ip",nargs="+", help="Query  IP attribution.")
+    parser.add_argument('-dl', '--domain_list', dest="domain_list", nargs="+",
+                        help="Query single or multiple domain name filing information.")
+    parser.add_argument('-df', '--domain_file', dest="domain_file",
+                        help="Query multiple domain name filing information as files.")
+    parser.add_argument('-rl', '--record_list', dest="record_list", nargs="+",
+                        help="Query single or multiple domain name resolution.")
+    parser.add_argument('-rf', '--record_file', dest="record_file",
+                        help="Query multiple domain name resolutions as files.")
+    parser.add_argument('-ip', '--ip', dest="ip", nargs="+", help="Query  IP attribution.")
     parser.add_argument('-a', '--auth', dest="auth", help="Show Auth Info.", action="store_true")
     parser.add_argument('-u', '--update', dest="update", help="Update Tools.", action="store_true")
     parser.add_argument('-v', '--version', dest="version", help="Show Version.", action="store_true")
