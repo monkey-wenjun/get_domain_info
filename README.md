@@ -23,9 +23,9 @@ requirements.txt 内容如下:
 
 ```
 dnspython3
-fire
+argparse
 requests
-tldextract 
+tldextract
 ```
 
 
