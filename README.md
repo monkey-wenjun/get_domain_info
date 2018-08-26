@@ -33,7 +33,7 @@ tldextract
 **查看帮助**
 
 ```python
- # ./get_domain_info.py
+ #./get_domain_info.py
 
             This is Get domain info Tools
 
@@ -45,13 +45,15 @@ usage: get_domain_info.py [-h] [-dl DOMAIN_LIST [DOMAIN_LIST ...]]
 optional arguments:
   -h, --help            show this help message and exit
   -dl DOMAIN_LIST [DOMAIN_LIST ...], --domain_list DOMAIN_LIST [DOMAIN_LIST ...]
-                        Specify the domain name to be queried.
+                        Query single or multiple domain name filing
+                        information.
   -df DOMAIN_FILE, --domain_file DOMAIN_FILE
-                        Obtain one or more domain name filing information.
+                        Query multiple domain name filing information as
+                        files.
   -rl RECORD_LIST [RECORD_LIST ...], --record_list RECORD_LIST [RECORD_LIST ...]
-                        Query single or multiple domain name resolution
+                        Query single or multiple domain name resolution.
   -rf RECORD_FILE, --record_file RECORD_FILE
-                        Get multiple domain name resolutions as files.
+                        Query multiple domain name resolutions as files.
   -ip IP [IP ...], --ip IP [IP ...]
                         Query IP attribution.
   -a, --auth            Show Auth Info.
