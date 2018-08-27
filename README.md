@@ -68,7 +68,7 @@ optional arguments:
 不管是备案还是 DNS 查询，如果域名包含完整 URL 的，会自动过滤提取裸域后进行查询，例如查询备案：
 
 ```
-➜  get_domain_info git:(master) ✗ ./get_domain_info.py -dl https://awen.me/post/18464.html
+ ./get_domain_info.py -dl https://awen.me/post/18464.html
 awen.me   ALREADY_BEIAN
 ```
 
