@@ -208,6 +208,11 @@ def get_record_list(*args):
 def get_ip_attribution(*args):
     for i in args:
         for ip in i:
+            if re.match(r'(?<![\.\d])(?:\d{1,3}\.){3}\d{1,3}(?![\.\d])',ip):
+                pass
+            else:
+                ip = get_record_a(ip)
+                ip = ip[0]
             url = "http://freeapi.ipip.net/" + str(ip)
             headers = {
                 'Cache-Control': "no-cache",
@@ -216,12 +221,9 @@ def get_ip_attribution(*args):
             response = requests.request("GET", url, headers=headers)
             if response.status_code == 200:
                 resp_json = response.json()
-                if resp_json[-1] == '电信/联通/移动':
-                    resp_json[-1] = 'BGP 线路'
                 return_str =  ",".join(f"{x}" for x in resp_json)
                 print(str(ip)+" 归属地是: "+return_str)
                 time.sleep(2)
-
 
 def menu():
 
