@@ -128,5 +128,12 @@ awen.me                                                     adrian.ns.cloudflare
 ./get_domain_info.py -df ~/Downloads/domain.txt
 ```
 
-
-
+### 3.批量查询 IP 归属地
+1.**批量查询单个或多个域名的归属地**
+```python
+./get_domain_info.py -ip www.baidu.com www.awen.me www.163.com 59.111.10.12
+14.215.177.38 归属地是: 中国,广东,广州,,电信
+183.131.24.37 归属地是: 中国,浙江,杭州,,电信
+115.231.22.125 归属地是: 中国,浙江,湖州,,电信
+59.111.10.12 归属地是: 中国,浙江,杭州,,电信/联通/移动
+```
