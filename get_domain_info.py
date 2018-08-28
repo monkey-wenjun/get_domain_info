@@ -11,6 +11,7 @@ import tldextract
 import sys
 import argparse
 import time
+import re
 
 
 def domian_extract(domain):
@@ -25,12 +26,13 @@ def domian_extract(domain):
 # Obtain one or more domain name filing information
 
 def get_filing_info(*args):
-    if args is not None:
-        for list in args:
-            for domain in list:
-                source_domain = tldextract.extract(domain)
-                domain = "{}.{}".format(source_domain.domain, source_domain.suffix)
-                get_single_filing_info(domain)
+    if args is  None:
+        sys.exit(1)
+    for list in args:
+        for domain in list:
+            source_domain = tldextract.extract(domain)
+            domain = "{}.{}".format(source_domain.domain, source_domain.suffix)
+            get_single_filing_info(domain)
 
 # Get a single domain record information
 
@@ -40,7 +42,7 @@ def get_single_filing_info(domain):
     domain = "{}.{}".format(source_domain.domain, source_domain.suffix)
     url = "https://sapi.k780.com"
     querystring = {"app": "domain.beian", "domain": domain, "appkey": "xxxx",
-                   "sign": "xxxxx", "format": "json"}
+                   "sign": "xxxxxx", "format": "json"}
     headers = {
         'Cache-Control': "no-cache"
     }
@@ -50,18 +52,16 @@ def get_single_filing_info(domain):
     isstatus = res_json['result']["status"]
 
     if issuccess == 1:
+        sys.exit(1)
         # ALREADY_BEIAN
-        if isstatus == "ALREADY_BEIAN":
-            print("{}   {}".format(str(domain), "ALREADY_BEIAN"))
-        # NOT_BEIAN
-        elif isstatus == "NOT_BEIAN":
-            print("{}   {}".format(str(domain), "NOT_BEIAN"))
-        # WAIT_PROCESS
-        elif isstatus == "WAIT_PROCESS":
-            print("{}   {}".format(str(domain), "WAIT_PROCESS"))
-    # Query failed
-    elif issuccess == 0:
-        print("Query failed")
+    if isstatus == "ALREADY_BEIAN":
+        print("{}   {}".format(str(domain), "ALREADY_BEIAN"))
+    # NOT_BEIAN
+    elif isstatus == "NOT_BEIAN":
+        print("{}   {}".format(str(domain), "NOT_BEIAN"))
+    # WAIT_PROCESS
+    elif isstatus == "WAIT_PROCESS":
+        print("{}   {}".format(str(domain), "WAIT_PROCESS"))
 
 # Get A record
 
@@ -77,6 +77,7 @@ def get_record_a(domain):
         return iplist
 
     except:
+
         return None
 
 # Get CNAME record
@@ -115,115 +116,115 @@ def get_record_ns(domain):
 
 def get_file_filing(file_path):
 
-    if file_path is not None:
-        with open(file_path) as f:
-            for line in f:
-                domain = line.strip("\n")
-                source_domain = tldextract.extract(domain)
-                domain = "{}.{}".format(source_domain.domain, source_domain.suffix)
-                if get_single_filing_info(domain) is True:
-                    print("{}   {}".format(str(domain), "ALREADY_BEIAN"))
-                else:
-                    print("{}   {}".format(str(domain), "NOT_BEIAN"))
-    else:
-        print("File path cannot be empty")
+    if file_path is None:
+        sys.exit(1)
+    with open(file_path) as f:
+        for line in f:
+            domain = line.strip("\n")
+            source_domain = tldextract.extract(domain)
+            domain = "{}.{}".format(source_domain.domain, source_domain.suffix)
+            if get_single_filing_info(domain) is True:
+                print("{}   {}".format(str(domain), "ALREADY_BEIAN"))
+            else:
+                print("{}   {}".format(str(domain), "NOT_BEIAN"))
 
 # Get multiple domain name resolutions as files
 
 def get_record_file(file_path):
 
-    if file_path is not None:
-        with open(file_path) as f:
-            ip_list = []
-            print("{:<30s}{:<30s}{:<30s}{:30s}".format("Domain", "CNAME", "NS", "A"))
-            for line in f:
-                domain = line.strip("\n")
-                domain = domian_extract(domain)
-                getcname = get_record_cname(domain)
-                getdns = get_record_a(domain)
-                getns = get_record_ns(domain)
+    if file_path is  None:
+        sys.exit(1)
+    with open(file_path) as f:
+        ip_list = []
+        print("{:<30s}{:<30s}{:<30s}{:30s}".format("Domain", "CNAME", "NS", "A"))
+        for line in f:
+            domain = line.strip("\n")
+            domain = domian_extract(domain)
+            getcname = get_record_cname(domain)
+            getdns = get_record_a(domain)
+            getns = get_record_ns(domain)
 
-                if getdns is not None:
-                    getdns_str = ",".join(f"{x}" for x in getdns)
-                else:
-                    getdns = ""
+            if getdns is not None:
+                getdns_str = ",".join(f"{x}" for x in getdns)
+            else:
+                getdns = ""
 
-                if getcname is not None:
-                    getcname = getcname
-                else:
-                    getcname = ""
+            if getcname is not None:
+                getcname = getcname
+            else:
+                getcname = ""
 
-                if getns is not None:
-                    getns = getns
-                else:
-                    getns = ""
+            if getns is not None:
+                getns = getns
+            else:
+                getns = ""
 
-                print('{:<30s}{:<30s}{:<30s}{:<30s}'.format(domain, getcname, getns, getdns_str))
+            print('{:<30s}{:<30s}{:<30s}{:<30s}'.format(domain, getcname, getns, getdns_str))
 
-                if getdns is not None:
-                    ip_list.append(getdns)
+            if getdns is not None:
+                ip_list.append(getdns)
 
 
-            # Formatting to remove duplicate IP
-            formatList = []
-            for id in ip_list:
-                if id not in formatList:
-                    formatList.append(id)
-            myList = [x for j in formatList for x in j]
-            print("=" * 12, "remove duplicates info", "=" * 14)
-            print("{}".format(myList))
+        # Formatting to remove duplicate IP
+        formatList = []
+        for id in ip_list:
+            if id not in formatList:
+                formatList.append(id)
+        myList = [x for j in formatList for x in j]
+        print("=" * 12, "remove duplicates info", "=" * 14)
+        print("{}".format(myList))
 
 # Read the domain name from the list for parsing
 
 def get_record_list(*args):
-    if args is not None:
-        print("{:<30s}{:<30s}{:<30s}{:30s}".format("Domain", "CNAME", "NS", "A"))
-        for key in args:
-            for line in key:
-                domain = line.strip("\n")
-                domain = domian_extract(domain)
-                getcname = get_record_cname(domain)
-                getdns = get_record_a(domain)
-                getns = get_record_ns(domain)
+    if args is  None:
+        sys.exit(1)
+    print("{:<30s}{:<30s}{:<30s}{:30s}".format("Domain", "CNAME", "NS", "A"))
+    for key in args:
+        for line in key:
+            domain = line.strip("\n")
+            domain = domian_extract(domain)
+            getcname = get_record_cname(domain)
+            getdns = get_record_a(domain)
+            getns = get_record_ns(domain)
 
-                if getdns is not None:
-                    getdns = ",".join(f"{x}" for x in getdns)
-                else:
-                    getdns = ""
+            if getdns is not None:
+                getdns = ",".join(f"{x}" for x in getdns)
+            else:
+                getdns = ""
 
-                if getcname is not None:
-                    getcname = getcname
-                else:
-                    getcname = ""
+            if getcname is not None:
+                getcname = getcname
+            else:
+                getcname = ""
 
-                if getns is not None:
-                    getns = getns
-                else:
-                    getns = ""
-                print('{:<30s}{:<30s}{:<30s}{:<30s}'.format(domain, getcname, getns, getdns))
+            if getns is not None:
+                getns = getns
+            else:
+                getns = ""
+            print('{:<30s}{:<30s}{:<30s}{:<30s}'.format(domain, getcname, getns, getdns))
 
 
 # Get the IP address attribution
 
-def get_ip_attribution(*args):
-    for i in args:
-        for ip in i:
-            if re.match(r'(?<![\.\d])(?:\d{1,3}\.){3}\d{1,3}(?![\.\d])',ip):
-                pass
-            else:
-                ip = get_record_a(ip)
-                ip = ip[0]
-            url = "http://freeapi.ipip.net/" + str(ip)
-            headers = {
-                'Cache-Control': "no-cache",
-            }
+def get_ip_attribution(args):
+    for ip in args:
+        if re.match(r'(?<![\.\d])(?:\d{1,3}\.){3}\d{1,3}(?![\.\d])',ip):
+            pass
+        else:
+            ip = get_record_a(ip)
+            ip = ip[0]
+        url = "http://freeapi.ipip.net/" + str(ip)
+        headers = {
+            'Cache-Control': "no-cache",
+        }
 
-            response = requests.request("GET", url, headers=headers)
-            if response.status_code == 200:
-                resp_json = response.json()
-                return_str =  ",".join(f"{x}" for x in resp_json)
-                print(str(ip)+" 归属地是: "+return_str)
-                time.sleep(2)
+        response = requests.request("GET", url, headers=headers)
+        if response.status_code == 200:
+            resp_json = response.json()
+            return_str =  ",".join(f"{x}" for x in resp_json)
+            print(str(ip)+" 归属地是: "+return_str)
+            time.sleep(2)
 
 def menu():
 
@@ -257,7 +258,7 @@ def menu():
     if args.record_file:
         get_record_file(args.record_file)
     if args.ip:
-        get_ip_attribution(args.ip)
+         get_ip_attribution(args.ip)
     if args.version:
         print("Version:1.0")
     if args.auth:
@@ -265,3 +266,5 @@ def menu():
 
 if __name__ == '__main__':
     menu()
+
+
