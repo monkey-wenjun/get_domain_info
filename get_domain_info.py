@@ -25,14 +25,13 @@ def domian_extract(domain):
 
 # Obtain one or more domain name filing information
 
-def get_filing_info(*args):
+def get_filing_info(args):
     if args is  None:
         sys.exit(1)
-    for list in args:
-        for domain in list:
-            source_domain = tldextract.extract(domain)
-            domain = "{}.{}".format(source_domain.domain, source_domain.suffix)
-            get_single_filing_info(domain)
+    for domain in args:
+        source_domain = tldextract.extract(domain)
+        domain = "{}.{}".format(source_domain.domain, source_domain.suffix)
+        get_single_filing_info(domain)
 
 # Get a single domain record information
 
@@ -42,7 +41,7 @@ def get_single_filing_info(domain):
     domain = "{}.{}".format(source_domain.domain, source_domain.suffix)
     url = "https://sapi.k780.com"
     querystring = {"app": "domain.beian", "domain": domain, "appkey": "xxxx",
-                   "sign": "xxxxxx", "format": "json"}
+                   "sign": "xxxx", "format": "json"}
     headers = {
         'Cache-Control': "no-cache"
     }
@@ -51,17 +50,17 @@ def get_single_filing_info(domain):
     issuccess = int(res_json['success'])
     isstatus = res_json['result']["status"]
 
-    if issuccess == 1:
-        sys.exit(1)
-        # ALREADY_BEIAN
+    # ALREADY_BEIAN
     if isstatus == "ALREADY_BEIAN":
         print("{}   {}".format(str(domain), "ALREADY_BEIAN"))
     # NOT_BEIAN
-    elif isstatus == "NOT_BEIAN":
+    if isstatus == "NOT_BEIAN":
         print("{}   {}".format(str(domain), "NOT_BEIAN"))
     # WAIT_PROCESS
-    elif isstatus == "WAIT_PROCESS":
+    if isstatus == "WAIT_PROCESS":
         print("{}   {}".format(str(domain), "WAIT_PROCESS"))
+    if issuccess == 1:
+        sys.exit(1)
 
 # Get A record
 
@@ -266,5 +265,4 @@ def menu():
 
 if __name__ == '__main__':
     menu()
-
 
